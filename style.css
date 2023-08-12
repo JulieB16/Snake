@@ -1,0 +1,75 @@
+
+*{
+    margin: 0;
+    color-scheme: light dark;
+}
+
+*::after, *::before{
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+h1{
+    margin: 0.5rem;
+    font-size: 20vw;
+}
+
+p{
+    font-size: 5vw;
+}
+
+button{
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px 10px;
+    margin: 1rem;
+    background-color: rgb(56, 96, 228);
+    border: 1px solid black;
+    border-radius: 20%;
+    color: white;
+    font-family: Georgia;
+    font-size: 16px;
+}
+
+/*Game Board*/
+
+#gameBoard{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(55, 189, 55, 0.856);
+    border: 2px solid black;
+    margin: 0 1rem;
+    height: 60vh;
+    grid-template-rows: repeat(15, 1fr);
+    grid-template-columns: repeat(15, 1fr);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.gridBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(0, 128, 0, 0.151);
+    width: calc((100vw - 2rem - 28px) / 15); /* Adjusted width calculation */
+    height: calc(60vh / 15);
+    box-sizing: border-box;
+}
+
+.snakeShow {
+    background-color: rgb(56, 96, 228);
+    border: 1px solid black;
+}
+
+.appleShow {
+    border: 1px solid black;
+    background-color: rgba(218, 7, 7, 0.89);
+}
