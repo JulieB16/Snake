@@ -1,2 +1,3 @@
 # Snake
-A basic snake game
+A basic snake game built using html, css, and javascript.
+
