@@ -165,13 +165,11 @@ function movement(gridBoxes) {
 
 function checkSelfCollision(gridBoxes) {
     if (snake.snakeBody.length > 1) {
-        snake.snakeBody.forEach((segment) => {
-            if (segment.col === snake.col && segment.row === snake.row) {
-                endGame(gridBoxes)
-            }
-        });
+        snake.snakeBody.map((segment) => {
+            return segment.col === snake.col && segment.row === snake.row 
+            ? endGame(gridBoxes) : false
+        })
     }
-    return false
 }
 
 //apple function
@@ -237,10 +235,12 @@ function clearMovement(gridBoxes){
 
 function endGame(gridBoxes){
     clearMovement(gridBoxes)
+
     gameBoard.textContent = " ";
     snake.score = 0
     scoreTxt.textContent = `Score: ${snake.score}`
     startScreen.style.display = "flex";
+    
     clearInterval(gameInterval)
 }
 
