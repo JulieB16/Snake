@@ -27,15 +27,15 @@ header{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 12rem;
+    height: 38vh;
 }
 
 h1{
-    font-size: 20vw;
+    font-size: 11vw;
 }
 
 p{
-    font-size: 5vw;
+    font-size: 3vw;
 }
 
 button{
@@ -76,7 +76,7 @@ button:active{
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: 1px solid rgba(0, 128, 0, 0.151);
+    /*outline: 1px solid rgba(0, 128, 0, 0.151);*/
     width: var(--gridBoxWidth);
     height: var(--gridBoxHeight);
     box-sizing: border-box;
@@ -84,11 +84,12 @@ button:active{
 
 .snakeShow {
     background-color: rgb(56, 96, 228);
-    outline: 1px solid black;
+    outline: 1px solid darkblue;
 }
 
 .appleShow {
-    outline: 1px solid black;
+    outline: 1px solid rgb(107, 2, 2);
+    border-radius: 5%;
     background-color: rgba(218, 7, 7, 0.89);
 }
 
@@ -97,7 +98,7 @@ button:active{
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 12rem;
+    top: 38vh;
     border: 2px solid black;
     width: 80vw;
     height: 60vh;
@@ -105,6 +106,50 @@ button:active{
     overflow: none;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.842);
+}
+
+/*Media Queries*/
+
+@media (min-width: 900px) {
+}
+
+@media (max-width: 900px) {
+    h1 {
+        font-size: 15vw;
+    }
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 17vw;
+    }
+    p {
+        font-size: 4vw;
+    }
+    header {
+        height: 30vh;
+    }
+    #startScreen {
+        top: 30vh;
+    }
+    :root {
+        --gridBoxAmount: 10;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 17vw;
+    }
+    p {
+        font-size: 4vw;
+    }
+    header {
+        height: 25vh;
+    }
+    #startScreen {
+        top: 25vh;
+    }
 }
 
 
