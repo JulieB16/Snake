@@ -1,8 +1,7 @@
 
 const gameBoard = document.querySelector("#gameBoard");
-const snakePlayer = document.querySelector("#snakePlayer");
 const playBtn = document.querySelector("#playBtn");
-const apple = document.querySelector("#apple");
+const scoreTxt = document.querySelector("#scoreTxt");
 const startScreen = document.querySelector("#startScreen");
 
 
@@ -11,8 +10,12 @@ const startScreen = document.querySelector("#startScreen");
 let snake = {
     row: 7,
     col: 5,
+    get head() {
+        return this.row + this.col;
+    },
     rotation: "right",
-    score: 0
+    score: 0,
+    snakeBody: [],
 }
 
 let applePos = {
@@ -25,6 +28,7 @@ let applePos = {
 let gridBoxes;
 let calculatedIndexApple = applePos.row * 15 + applePos.col;
 let calculatedIndexSnake = snake.row * 15 + snake.col;
+
 //starting game
 
 playBtn.addEventListener("click", function() {
@@ -36,7 +40,10 @@ function startGame(){
 
     gameBoard.textContent = " ";
 
-    for (let boxes = 0; boxes < 225; boxes++){
+    let gridBoxAmount = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gridBoxAmount').trim())
+    let gridBoxTotal = gridBoxAmount * gridBoxAmount
+
+    for (let boxes = 0; boxes < gridBoxTotal; boxes++){
         let gridBox = document.createElement("div")
         gridBox.classList.add("gridBox");
         gameBoard.appendChild(gridBox);
@@ -47,8 +54,12 @@ function startGame(){
     snake = {
         row: 7,
         col: 5,
+        get head() {
+            return this.row + this.col;
+        },
         rotation: "right",
-        score: 0
+        score: 0,
+        snakeBody: [],
     }
 
     applePos = {
@@ -69,7 +80,13 @@ function startGame(){
 function setSnakePos(gridBoxes) {
     let calculatedIndexSnake = snake.row * 15 + snake.col;
     gridBoxes[calculatedIndexSnake].classList.add("snakeShow");
-}
+    
+    for (let i = 0; i < snake.snakeBody.length; i++) {
+        const segment = snake.snakeBody[i];
+        const segmentIndex = segment.row * 15 + segment.col;
+        gridBoxes[segmentIndex].classList.add("snakeShow");
+    }
+}  
 
 function changeDirection(newDirection) {
     snake.rotation = newDirection;
@@ -105,26 +122,47 @@ function movement(gridBoxes) {
 
     let snakeTotalLoc = snake.row * 15 + snake.col;
     let appleTotalLoc = applePos.row * 15 + applePos.col;
-    
 
     if (appleTotalLoc === snakeTotalLoc) {
-        getAppleCoordinates(gridBoxes)
-    }
+        snake.score += 1;
+        scoreTxt.textContent = `Score: ${snake.score}`;
 
-    if (newCol < 0 || newCol > 14 ||
-        newRow > 14 || newRow < 0) {
-        endGame(gridBoxes)
+        getAppleCoordinates(gridBoxes);
+
+        snake.snakeBody.push({ row: snake.row, col: snake.col });
+
+        setSnakePos(gridBoxes);
+        
+        if (newCol < 0 || newCol > 14 || newRow > 14 || newRow < 0) {
+            endGame(gridBoxes);
+        } else {
+            updateSnakeBody(gridBoxes);
+            snake.row = newRow;
+            snake.col = newCol;
+            setSnakePos(gridBoxes);
+        }
+    } else if (checkSelfCollision(gridBoxes)) {
+    } else if (newCol < 0 || newCol > 14 || newRow > 14 || newRow < 0) {
+        endGame(gridBoxes);
     } else {
-        snake.row = newRow
-        snake.col = newCol
-        setSnakePos(gridBoxes)
+        updateSnakeBody(gridBoxes);
+        snake.row = newRow;
+        snake.col = newCol;
+        setSnakePos(gridBoxes);
     }
 }
 
-function clearMovement(gridBoxes){
-    calculatedIndexSnake = snake.row * 15 + snake.col;
-    let oldCalculatedIndexSnake = calculatedIndexSnake
-    gridBoxes[oldCalculatedIndexSnake].classList.remove("snakeShow")
+//check collision with self
+
+function checkSelfCollision(gridBoxes) {
+    if (snake.snakeBody.length > 1) {
+        snake.snakeBody.forEach((segment) => {
+            if (segment.col === snake.col && segment.row === snake.row) {
+                endGame(gridBoxes)
+            }
+        });
+    }
+    return false
 }
 
 //apple function
@@ -138,36 +176,61 @@ function setApplePos(gridBoxes) {
 function getAppleCoordinates(gridBoxes){
 
     let newAppleRow, newAppleCol;
+
+    let calculatedIndexApple = applePos.row * 15 + applePos.col;
+    gridBoxes[calculatedIndexApple].classList.remove("appleShow");
+
     do {
+        newAppleCol = Math.floor(Math.random() * 15);
+        newAppleRow = Math.floor(Math.random() * 15);
+    } while (isAppleInSnake(newAppleRow, newAppleCol));
 
-        snake.score += 1
+    applePos.col = newAppleCol;
+    applePos.row = newAppleRow;
 
-        let calculatedIndexApple = applePos.row * 15 + applePos.col;
-        gridBoxes[calculatedIndexApple].classList.remove("appleShow");
+    calculatedIndexApple = newAppleRow * 15 + newAppleCol;
+    gridBoxes[calculatedIndexApple].classList.add("appleShow");
+}
 
-        applePos.col = Math.floor(Math.random() * 15);
-        applePos.row = Math.floor(Math.random() * 15);
+function isAppleInSnake(row, col) {
+    if (row === snake.row && col === snake.col) {
+        return true;
+    }
+    return snake.snakeBody.some(segment => segment.row === row && segment.col === col);
+}
 
-        calculatedIndexApple = applePos.row * 15 + applePos.col;
-        gridBoxes[calculatedIndexApple].classList.add("appleShow");
+//snake body
 
-        
-    } while (snake.row === newAppleRow && snake.col === newAppleCol);
+function updateSnakeBody(gridBoxes){
+    snake.snakeBody.unshift({ row: snake.row, col: snake.col });
+
+    if (snake.snakeBody.length > snake.score) {
+        const lastSegment = snake.snakeBody.pop();
+        const segmentIndex = lastSegment.row * 15 + lastSegment.col;
+        gridBoxes[segmentIndex].classList.remove("snakeShow");
+    }
 }
 
 //game loop
 
 function mainGameLoop(gridBoxes){
-    movement(gridBoxes);
 
     gameInterval = setInterval(() => {
         movement(gridBoxes);
-    }, 400);
+    }, 300);
+}
+
+function clearMovement(gridBoxes){
+    calculatedIndexSnake = snake.row * 15 + snake.col;
+    let oldCalculatedIndexSnake = calculatedIndexSnake
+    gridBoxes[oldCalculatedIndexSnake].classList.remove("snakeShow")
 }
 
 function endGame(gridBoxes){
     clearMovement(gridBoxes)
     gameBoard.textContent = " ";
+    snake.score = 0
+    scoreTxt.textContent = `Score: ${snake.score}`
     startScreen.style.display = "flex";
     clearInterval(gameInterval)
 }

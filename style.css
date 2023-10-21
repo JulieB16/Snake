@@ -66,8 +66,8 @@ button:active{
     border: 2px solid black;
     width: 80vw;
     height: 60vh;
-    grid-template-rows: repeat(15, 1fr);
-    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(var(--gridBoxAmount), 1fr);
+    grid-template-columns: repeat(var(--gridBoxAmount), 1fr);
     box-sizing: border-box;
     overflow: none;
 }
