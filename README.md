@@ -1,6 +1,10 @@
 # Snake
 This is a basic snake game built using html, css, and javascript.
 
+Live Site:
+https://julieb16.github.io/Snake/
+<br>
+
 ![Screenshot (1)](https://github.com/JulieB16/Snake/assets/106155126/a5cb188b-10b6-4ffc-9b74-dbbbc00845f4)
 <br>
 Players click play to start the game.

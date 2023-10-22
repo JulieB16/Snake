@@ -30,6 +30,11 @@ let gridBoxAmount = parseInt(getComputedStyle(document.documentElement).getPrope
 let calculatedIndexApple = applePos.row * gridBoxAmount + applePos.col;
 let calculatedIndexSnake = snake.row * gridBoxAmount + snake.col;
 
+const snakeInitialRow = Math.round(gridBoxAmount / 2)
+const snakeInitialCol = Math.round(gridBoxAmount / 2 - 3)
+const appleInitialRow = snakeInitialRow
+const appleInitialCol = Math.round(gridBoxAmount / 2 + 2)
+
 //starting game
 
 playBtn.addEventListener("click", function() {
@@ -50,12 +55,6 @@ function startGame(){
     }
     
     const gridBoxes = gameBoard.querySelectorAll(".gridBox");
-    
-    const snakeInitialRow = gridBoxAmount / 2 - 1
-    const snakeInitialCol = gridBoxAmount / 2 - 2
-
-    const appleInitialRow = snakeInitialRow
-    const appleInitialCol = gridBoxAmount / 2 + 2
 
     snake = {
         row: snakeInitialRow,
